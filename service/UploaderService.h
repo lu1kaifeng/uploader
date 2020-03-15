@@ -17,7 +17,6 @@ namespace uploader {
         char * data;
         unsigned long long len;
         Vid(const std::string& id,const std::string& res,char * data, unsigned long long len);
-        ~Vid();
     };
     class UploaderService : Component {
     private:

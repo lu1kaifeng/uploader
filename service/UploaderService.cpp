@@ -5,13 +5,14 @@
 #include "UploaderService.h"
 
 uploader::UploaderService::UploaderService(cppcms::application &ctx) : Component(ctx) {
-    this->httpdRoot = boost::filesystem::path(Component::ctx.settings().at("www").str());
-    this->shaka =  boost::filesystem::path(Component::ctx.settings().at("shaka").str());
-    this->ffmpeg = boost::filesystem::path(Component::ctx.settings().at("ffmpeg").str());
+    this->httpdRoot = boost::filesystem::path(Component::ctx.settings().at("app.www").str());
+    this->shaka =  boost::filesystem::path(Component::ctx.settings().at("app.shaka").str());
+    this->ffmpeg = boost::filesystem::path(Component::ctx.settings().at("app.ffmpeg").str());
 }
 
 uploader::UploaderService &uploader::UploaderService::operator<<(const uploader::Vid &vid) {
     auto rawVidPath = this->httpdRoot / boost::filesystem::path(vid.id);
+    boost::filesystem::create_directory(rawVidPath);
     auto ofs = std::ofstream((rawVidPath / boost::filesystem::path("raw.mp4")).native());
     ofs.write(vid.data,vid.len);
     ofs.flush();
@@ -34,8 +35,4 @@ uploader::Vid::Vid(const std::string& id,const std::string& res, char *data, uns
     this->data = data;
     this->id = id;
     this->res = res;
-}
-
-uploader::Vid::~Vid() {
-    delete this->data;
 }

@@ -7,6 +7,7 @@
 void uploader::uploader::upload(std::string id){
     if(request().request_method()=="POST") {
         auto vid = Vid(id,request().getenv("HTTP_X_VID_RES"),(char *)request().raw_post_data().first,request().raw_post_data().second);
+        this->uploaderService << vid;
         response().status(response().ok);
     } else{
         response().status(response().method_not_allowed);

@@ -24,6 +24,7 @@ namespace uploader{
     public:
         explicit uploader(cppcms::service &s);
     private:
+        UploaderService uploaderService = UploaderService(*this);
         void upload(std::string id);
     };
 }

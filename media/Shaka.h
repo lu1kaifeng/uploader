@@ -42,7 +42,7 @@ namespace uploader {
 
         Shaka &operator<<(InStream &in);
 
-        boost::process::child operator()(const Param& param);
+        void operator()(const Param& param);
 
         explicit Shaka(boost::filesystem::path shaka);
     };

@@ -35,14 +35,14 @@ Param::Param(const boost::filesystem::path& mpdOutput) {
     this->mpdOutput = mpdOutput;
 }
 
-boost::process::child Shaka::operator()(const Param& param) {
+void Shaka::operator()(const Param& param) {
     std::ostringstream oss;
     for(const auto& stream : this->inStreams){
         oss << stream;
     }
     oss << param;
     oss.flush();
-    return boost::process::child(this->shaka,oss.str());
+    boost::process::child(this->shaka.native()+" "+oss.str()).wait();
 }
 
 Shaka::Shaka(boost::filesystem::path shaka) {
