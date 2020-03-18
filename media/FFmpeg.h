@@ -8,6 +8,7 @@
 #include <memory>
 #include <boost/process.hpp>
 #include <boost/process/child.hpp>
+#include "spdlog/spdlog.h"
 #include "media/Shaka.h"
 #ifndef UPLOADER_FFMPEG_H
 #define UPLOADER_FFMPEG_H

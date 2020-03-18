@@ -4,6 +4,7 @@
 
 #include "FFmpeg.h"
 #include <iostream>
+#include <memory>
 #include <utility>
 using namespace uploader;
 FFmpeg::FFmpeg(boost::filesystem::path ffmpeg, boost::filesystem::path rootDir,boost::filesystem::path fileName,const std::string& res) {
@@ -24,7 +25,7 @@ std::string uploader::transcodeCmd<VidRes::RES360P>(const boost::filesystem::pat
 }
 
 std::unique_ptr<std::vector<uploader::InStream>> FFmpeg::operator()() {
-    auto streams = std::unique_ptr<std::vector<uploader::InStream>>(new std::vector<uploader::InStream>());
+    auto streams = std::make_unique<std::vector<uploader::InStream>>();
     streams->push_back(uploader::InStream("audio","audio.mp4"));
     auto ffmpegChildren = std::vector<boost::process::child>();
     if(this->res >= 360){
@@ -43,8 +44,16 @@ std::unique_ptr<std::vector<uploader::InStream>> FFmpeg::operator()() {
         ffmpegChildren.push_back(transcodeExec<VidRes::RES1080P>(this->ffmpeg,this->rootDir,this->fileName));
         streams->push_back(uploader::InStream("video","h264_1080p.mp4"));
     }
-    for(auto &&child : ffmpegChildren){
+    for(auto &&child : ffmpegChildren) {
         child.wait();
+        if (child.exit_code() != 0) {
+            spdlog::error(std::string("FFmpeg returned exit code ") + std::to_string(child.exit_code()) +
+                          std::string(" during transcoding process exited for ") +
+                          std::string((this->rootDir / this->fileName).native()));
+        } else {
+            spdlog::info(std::string("FFmpeg transcoding process exited successfully for ") +
+                         std::string((this->rootDir / this->fileName).native()));
+        }
     }
     return streams;
 }

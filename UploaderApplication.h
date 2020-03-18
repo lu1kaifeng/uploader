@@ -12,6 +12,7 @@
 #include <cppcms/url_dispatcher.h>
 #include <cppcms/url_mapper.h>
 #include "service/UploaderService.h"
+#include "application/VideoApplication.h"
 #include <fstream>
 #include <cstdlib>
 
@@ -20,12 +21,9 @@
 
 
 namespace uploader{
-    class uploader : public cppcms::application {
+    class UploaderApplication : public cppcms::application {
     public:
-        explicit uploader(cppcms::service &s);
-    private:
-        UploaderService uploaderService = UploaderService(*this);
-        void upload(std::string id);
+        explicit UploaderApplication(cppcms::service &s);
     };
 }
 

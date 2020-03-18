@@ -8,6 +8,7 @@
 #include <sstream>
 #include <boost/process.hpp>
 #include <boost/process/child.hpp>
+#include "spdlog/spdlog.h"
 #ifndef UPLOADER_SHAKA_H
 #define UPLOADER_SHAKA_H
 namespace uploader {

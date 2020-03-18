@@ -3,6 +3,7 @@
 //
 #include <cppcms/http_context.h>
 #include <cppcms/application.h>
+#include <cppcms/http_response.h>
 #include <cppcms/json.h>
 #ifndef UPLOADER_COMPONENT_H
 #define UPLOADER_COMPONENT_H

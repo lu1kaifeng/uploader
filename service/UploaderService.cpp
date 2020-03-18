@@ -11,23 +11,25 @@ uploader::UploaderService::UploaderService(cppcms::application &ctx) : Component
 }
 
 uploader::UploaderService &uploader::UploaderService::operator<<(const uploader::Vid &vid) {
-    auto rawVidPath = this->httpdRoot / boost::filesystem::path(vid.id);
-    boost::filesystem::create_directory(rawVidPath);
-    auto ofs = std::ofstream((rawVidPath / boost::filesystem::path("raw.mp4")).native());
-    ofs.write(vid.data,vid.len);
-    ofs.flush();
-    ofs.close();
-    auto ffmpegExec = uploader::FFmpeg(this->ffmpeg,rawVidPath,boost::filesystem::path("raw.mp4"),vid.res);
-    auto streams = ffmpegExec();
-    auto shakaExec = uploader::Shaka(this->shaka);
-    for(auto&& stream : *streams){
-        stream.sourceMedia = rawVidPath / boost::filesystem::path("raw.mp4");
-        stream.destination = rawVidPath / stream.destination;
-        shakaExec << stream;
-    }
-    auto param = uploader::Param();
-    param.mpdOutput = rawVidPath / param.mpdOutput;
-    shakaExec(param);
+    boost::asio::post(*this->pool, [=]() {
+        auto rawVidPath = this->httpdRoot / boost::filesystem::path(vid.id);
+        boost::filesystem::create_directory(rawVidPath);
+        auto ofs = std::ofstream((rawVidPath / boost::filesystem::path("raw.mp4")).native());
+        ofs.write(vid.data, vid.len);
+        ofs.flush();
+        ofs.close();
+        auto ffmpegExec = uploader::FFmpeg(this->ffmpeg, rawVidPath, boost::filesystem::path("raw.mp4"), vid.res);
+        auto streams = ffmpegExec();
+        auto shakaExec = uploader::Shaka(this->shaka);
+        for (auto &&stream : *streams) {
+            stream.sourceMedia = rawVidPath / boost::filesystem::path("raw.mp4");
+            stream.destination = rawVidPath / stream.destination;
+            shakaExec << stream;
+        }
+        auto param = uploader::Param();
+        param.mpdOutput = rawVidPath / param.mpdOutput;
+        shakaExec(param);
+    });
 }
 
 uploader::Vid::Vid(const std::string& id,const std::string& res, char *data, unsigned long long len) {

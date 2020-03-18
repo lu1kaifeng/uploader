@@ -8,8 +8,10 @@
 #include <Component.h>
 #include <boost/filesystem.hpp>
 #include <fstream>
+#include <memory>
 #include "media/FFmpeg.h"
 #include "media/Shaka.h"
+#include "boost/asio/thread_pool.hpp"
 namespace uploader {
     struct Vid{
         std::string id;
@@ -20,7 +22,9 @@ namespace uploader {
     };
     class UploaderService : Component {
     private:
-        boost::filesystem::path httpdRoot,ffmpeg,shaka;
+        std::unique_ptr<boost::asio::thread_pool> pool = std::unique_ptr<boost::asio::thread_pool>(
+                new boost::asio::thread_pool());
+        boost::filesystem::path httpdRoot, ffmpeg, shaka;
     public:
         explicit UploaderService(cppcms::application &ctx);
         UploaderService &operator<<(const Vid& vid);

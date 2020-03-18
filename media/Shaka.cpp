@@ -37,12 +37,22 @@ Param::Param(const boost::filesystem::path& mpdOutput) {
 
 void Shaka::operator()(const Param& param) {
     std::ostringstream oss;
-    for(const auto& stream : this->inStreams){
+    for (const auto &stream : this->inStreams) {
         oss << stream;
     }
     oss << param;
     oss.flush();
-    boost::process::child(this->shaka.native()+" "+oss.str()).wait();
+    auto child = boost::process::child(this->shaka.native() + " " + oss.str());
+    child.wait();
+    if (child.exit_code() != 0) {
+        spdlog::error(std::string("Shaka Packager returned exit code ") + std::to_string(child.exit_code()) +
+                      std::string(" during fragmentation process exited for ") +
+                      std::string((param.mpdOutput).native()));
+    } else {
+        spdlog::info(std::string("Shaka Packager fragmentation process exited successfully for ") +
+                     std::string((param.mpdOutput).native()));
+    }
+
 }
 
 Shaka::Shaka(boost::filesystem::path shaka) {
