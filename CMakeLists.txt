@@ -21,3 +21,11 @@ target_link_libraries(uploader Threads::Threads)
 target_link_libraries(uploader boost_filesystem)
 target_link_libraries(uploader boost_system)
 target_link_libraries(uploader ${CMAKE_CURRENT_SOURCE_DIR}/spdlog/build/libspdlog.a)
+
+
+include(GoogleTest)
+add_executable(uploader_test test/JwtAuthTest.cpp)
+target_link_libraries(uploader_test gtest)
+target_link_libraries(uploader_test Threads::Threads)
+gtest_add_tests(TARGET uploader_test SOURCES test/JwtAuthTest.cpp)
+add_test(NAME uploader_test COMMAND uploader_test)
