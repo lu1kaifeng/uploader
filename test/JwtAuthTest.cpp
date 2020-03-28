@@ -1,4 +1,5 @@
 #include "gtest/gtest.h"
+#include "uploader/UploaderService.h"
 
 TEST(JwtAuthTest, Auth) {
     ASSERT_FALSE(0);

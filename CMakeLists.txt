@@ -3,29 +3,15 @@ project(uploader)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(uploader main.cpp media/Shaka.cpp media/Shaka.h media/FFmpeg.cpp media/FFmpeg.h UploaderApplication.cpp UploaderApplication.h service/UploaderService.cpp service/UploaderService.h Component.cpp Component.h application/VideoApplication.cpp application/VideoApplication.h)
-
-include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-include_directories(jwt-cpp/include)
-include_directories(spdlog/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/include)
 
 set(Boost_INCLUDE_DIR /usr/local/include/boost)
 find_package(Boost)
-target_link_libraries(uploader cppcms)
-target_link_libraries(uploader booster)
-
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
-target_link_libraries(uploader Threads::Threads)
-target_link_libraries(uploader boost_filesystem)
-target_link_libraries(uploader boost_system)
-target_link_libraries(uploader ${CMAKE_CURRENT_SOURCE_DIR}/spdlog/build/libspdlog.a)
+add_subdirectory(test)
+add_subdirectory(src)
 
-
-include(GoogleTest)
-add_executable(uploader_test test/JwtAuthTest.cpp)
-target_link_libraries(uploader_test gtest)
-target_link_libraries(uploader_test Threads::Threads)
-gtest_add_tests(TARGET uploader_test SOURCES test/JwtAuthTest.cpp)
-add_test(NAME uploader_test COMMAND uploader_test)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/lib)

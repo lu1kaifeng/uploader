@@ -1,0 +1,6 @@
+include(GoogleTest)
+add_executable(uploader_test JwtAuthTest.cpp)
+target_link_libraries(uploader_test gtest)
+target_link_libraries(uploader_test Threads::Threads)
+gtest_add_tests(TARGET uploader_test SOURCES JwtAuthTest.cpp)
+add_test(NAME uploader_test COMMAND uploader_test)
