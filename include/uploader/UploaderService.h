@@ -9,8 +9,8 @@
 #include <boost/filesystem.hpp>
 #include <fstream>
 #include <memory>
-#include "FFmpeg.h"
-#include "Shaka.h"
+#include "uploader/media/FFmpeg.h"
+#include "uploader/media/Shaka.h"
 #include "boost/asio/thread_pool.hpp"
 
 namespace uploader {
