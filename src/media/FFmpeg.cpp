@@ -26,23 +26,23 @@ std::string uploader::transcodeCmd<VidRes::RES360P>(const boost::filesystem::pat
 
 std::unique_ptr<std::vector<uploader::InStream>> FFmpeg::operator()() {
     auto streams = std::make_unique<std::vector<uploader::InStream>>();
-    streams->push_back(uploader::InStream("audio","audio.mp4"));
+    streams->push_back(uploader::InStream("audio", "h264_baseline_360p_600.mp4", "audio.mp4"));
     auto ffmpegChildren = std::vector<boost::process::child>();
     if(this->res >= 360){
-        ffmpegChildren.push_back(transcodeExec<VidRes::RES360P>(this->ffmpeg,this->rootDir,this->fileName));
-        streams->push_back(uploader::InStream("video","h264_360p.mp4"));
+        ffmpegChildren.push_back(transcodeExec<VidRes::RES360P>(this->ffmpeg, this->rootDir, this->fileName));
+        streams->push_back(uploader::InStream("video", "h264_baseline_360p_600.mp4", "h264_360p.mp4"));
     }
     if(this->res >= 480){
-        ffmpegChildren.push_back(transcodeExec<VidRes::RES480P>(this->ffmpeg,this->rootDir,this->fileName));
-        streams->push_back(uploader::InStream("video","h264_480p.mp4"));
+        ffmpegChildren.push_back(transcodeExec<VidRes::RES480P>(this->ffmpeg, this->rootDir, this->fileName));
+        streams->push_back(uploader::InStream("video", "h264_main_480p_1000.mp4", "h264_480p.mp4"));
     }
     if(this->res >= 720){
-        ffmpegChildren.push_back(transcodeExec<VidRes::RES720P>(this->ffmpeg,this->rootDir,this->fileName));
-        streams->push_back(uploader::InStream("video","h264_720p.mp4"));
+        ffmpegChildren.push_back(transcodeExec<VidRes::RES720P>(this->ffmpeg, this->rootDir, this->fileName));
+        streams->push_back(uploader::InStream("video", "h264_main_720p_3000.mp4", "h264_720p.mp4"));
     }
     if(this->res >= 1080){
-        ffmpegChildren.push_back(transcodeExec<VidRes::RES1080P>(this->ffmpeg,this->rootDir,this->fileName));
-        streams->push_back(uploader::InStream("video","h264_1080p.mp4"));
+        ffmpegChildren.push_back(transcodeExec<VidRes::RES1080P>(this->ffmpeg, this->rootDir, this->fileName));
+        streams->push_back(uploader::InStream("video", "h264_high_1080p_6000.mp4", "h264_1080p.mp4"));
     }
     for(auto &&child : ffmpegChildren) {
         child.wait();

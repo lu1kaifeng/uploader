@@ -12,6 +12,7 @@
 #include "uploader/media/FFmpeg.h"
 #include "uploader/media/Shaka.h"
 #include "boost/asio/thread_pool.hpp"
+#include "packager/packager.h"
 
 namespace uploader {
     struct Vid {

@@ -20,15 +20,23 @@ uploader::UploaderService &uploader::UploaderService::operator<<(const uploader:
         ofs.close();
         auto ffmpegExec = uploader::FFmpeg(this->ffmpeg, rawVidPath, boost::filesystem::path("raw.mp4"), vid.res);
         auto streams = ffmpegExec();
-        auto shakaExec = uploader::Shaka(this->shaka);
+
+        auto packager = shaka::Packager();
+        auto packaging_params = shaka::PackagingParams();
+
+        auto stream_descriptors = std::vector<shaka::StreamDescriptor>();
+
         for (auto &&stream : *streams) {
-            stream.sourceMedia = rawVidPath / boost::filesystem::path("raw.mp4");
-            stream.destination = rawVidPath / stream.destination;
-            shakaExec << stream;
+            auto streamDesc = shaka::StreamDescriptor();
+            streamDesc.input = (rawVidPath / stream.transcoded).native();
+            streamDesc.stream_selector = stream.streamType;
+            streamDesc.output = (rawVidPath / stream.dashOutput).native();
+            stream_descriptors.push_back(streamDesc);
         }
-        auto param = uploader::Param();
-        param.mpdOutput = rawVidPath / param.mpdOutput;
-        shakaExec(param);
+        packaging_params.mpd_params.mpd_output = (rawVidPath / boost::filesystem::path("h264.mpd")).native();
+        packaging_params.chunking_params.segment_duration_in_seconds = 2;
+        packager.Initialize(packaging_params, stream_descriptors);
+        packager.Run();
     });
 }
 

@@ -10,8 +10,9 @@ set(Boost_INCLUDE_DIR /usr/local/include/boost)
 find_package(Boost)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
+link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/lib)
 
 add_subdirectory(test)
 add_subdirectory(src)
 
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/lib/lib)
+

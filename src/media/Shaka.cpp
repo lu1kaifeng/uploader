@@ -7,25 +7,27 @@
 #include <utility>
 using namespace uploader;
 InStream::InStream(boost::filesystem::path sourceMedia,
-std::string streamType,
-boost::filesystem::path destination) {
+                   std::string streamType,
+                   boost::filesystem::path transcoded, boost::filesystem::path dashOutput) {
     this->sourceMedia = std::move(sourceMedia);
     this->streamType = std::move(streamType);
-    this->destination = std::move(destination);
+    this->transcoded = std::move(transcoded);
+    this->dashOutput = std::move(dashOutput);
 }
 
-InStream::InStream(std::string streamType, const boost::filesystem::path& destination) {
+InStream::InStream(std::string streamType, boost::filesystem::path transcoded, boost::filesystem::path dashOutput) {
     this->streamType = std::move(streamType);
-    this->destination = std::move(destination);
+    this->transcoded = std::move(transcoded);
+    this->dashOutput = std::move(dashOutput);
 }
 
 std::ostream& operator<<(std::ostream &o,const InStream& stream){
     return o << std::string(" in=")
-        << stream.sourceMedia.native()
-        << std::string(",stream=")
-        << stream.streamType
-        << std::string(",output=")
-        << stream.destination.native()
+             << stream.sourceMedia.native()
+             << std::string(",stream=")
+             << stream.streamType
+             << std::string(",output=")
+             << stream.transcoded.native()
         << std::string(" ");
 }
 

@@ -16,14 +16,15 @@ namespace uploader {
     public:
         boost::filesystem::path sourceMedia;
         std::string streamType;
-        boost::filesystem::path destination;
+        boost::filesystem::path transcoded;
+        boost::filesystem::path dashOutput;
 
         InStream(boost::filesystem::path sourceMedia,
                  std::string streamType,
-                 boost::filesystem::path destination);
+                 boost::filesystem::path transcoded, boost::filesystem::path dashOutput);
 
         InStream(std::string streamType,
-                 const boost::filesystem::path& destination);
+                 boost::filesystem::path transcoded, boost::filesystem::path dashOutput);
     };
 
     class Param {

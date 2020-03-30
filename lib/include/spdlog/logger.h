@@ -9,7 +9,7 @@
 // 1. Checks if its log level is enough to log the message and if yes:
 // 2. Call the underlying sinks to do the job.
 // 3. Each sink use its own private copy of a formatter to format the message
-// and send to its destination.
+// and send to its transcoded.
 //
 // The use of private formatter per sink provides the opportunity to cache some
 // formatted data, and support for different format per sink.
