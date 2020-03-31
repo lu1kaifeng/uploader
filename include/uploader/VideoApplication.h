@@ -12,7 +12,9 @@
 #include <cppcms/url_dispatcher.h>
 #include <cppcms/url_mapper.h>
 #include <uploader/UploaderService.h>
+#include <uploader/AuthService.h>
 #include "spdlog/spdlog.h"
+#include "jwt-cpp/jwt.h"
 
 #ifndef UPLOADER_VIDEOAPPLICATION_H
 #define UPLOADER_VIDEOAPPLICATION_H
@@ -24,7 +26,7 @@ namespace uploader {
 
     private:
         UploaderService uploaderService = UploaderService(*this);
-
+        AuthService authService = AuthService(*this);
         void upload(std::string id);
     };
 }
