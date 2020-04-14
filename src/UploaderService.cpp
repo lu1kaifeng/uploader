@@ -11,21 +11,18 @@ uploader::UploaderService::UploaderService(cppcms::application &ctx) : Component
 }
 
 uploader::UploaderService &uploader::UploaderService::operator<<(const uploader::Vid &vid) {
+    auto rawVidPath = this->httpdRoot / boost::filesystem::path(vid.id);
+    boost::filesystem::create_directory(rawVidPath);
+    auto ofs = std::ofstream((rawVidPath / boost::filesystem::path("raw.mp4")).native());
+    ofs.write(vid.data, vid.len);
+    ofs.flush();
+    ofs.close();
     boost::asio::post(*this->pool, [=]() {
-        auto rawVidPath = this->httpdRoot / boost::filesystem::path(vid.id);
-        boost::filesystem::create_directory(rawVidPath);
-        auto ofs = std::ofstream((rawVidPath / boost::filesystem::path("raw.mp4")).native());
-        ofs.write(vid.data, vid.len);
-        ofs.flush();
-        ofs.close();
         auto ffmpegExec = uploader::FFmpeg(this->ffmpeg, rawVidPath, boost::filesystem::path("raw.mp4"), vid.res);
         auto streams = ffmpegExec();
-
         auto packager = shaka::Packager();
         auto packaging_params = shaka::PackagingParams();
-
         auto stream_descriptors = std::vector<shaka::StreamDescriptor>();
-
         for (auto &&stream : *streams) {
             auto streamDesc = shaka::StreamDescriptor();
             streamDesc.input = (rawVidPath / stream.transcoded).native();

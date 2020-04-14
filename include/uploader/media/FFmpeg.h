@@ -49,6 +49,9 @@ namespace uploader {
         FFmpeg(boost::filesystem::path ffmpeg,boost::filesystem::path rootDir,boost::filesystem::path fileName, const std::string &res);
         std::unique_ptr<std::vector<uploader::InStream>> operator()();
     };
+    boost::process::child
+    thumbnailExec(const boost::filesystem::path &ffmpeg, const std::string &res, const boost::filesystem::path &rootDir,
+                  const boost::filesystem::path &fileName);
 
     template<VidRes vidRes>
     boost::process::child transcodeExec(const boost::filesystem::path& ffmpeg,const boost::filesystem::path &rootDir, const boost::filesystem::path &fileName);
