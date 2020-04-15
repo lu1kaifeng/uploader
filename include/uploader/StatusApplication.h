@@ -1,11 +1,9 @@
-//
-// Created by root on 3/17/20.
-//
 #include <cppcms/service.h>
 #include <cppcms/application.h>
 #include <cppcms/applications_pool.h>
 #include <cppcms/cache_interface.h>
 #include <iostream>
+#include <string>
 #include <cppcms/http_request.h>
 #include <cppcms/http_context.h>
 #include <cppcms/http_response.h>
@@ -14,22 +12,19 @@
 #include <uploader/UploaderService.h>
 #include <uploader/AuthService.h>
 #include "spdlog/spdlog.h"
+#include "uploader/StatusService.h"
 #include "jwt-cpp/jwt.h"
 
-#ifndef UPLOADER_VIDEOAPPLICATION_H
-#define UPLOADER_VIDEOAPPLICATION_H
-
 namespace uploader {
-    class VideoApplication : public cppcms::application {
+    class StatusApplication : public cppcms::application {
     public:
-        explicit VideoApplication(cppcms::service &srv);
+        explicit StatusApplication(cppcms::service &srv);
+
+        Status operator()(std::string);
 
     private:
-        UploaderService uploaderService = UploaderService(*this);
-        AuthService authService = AuthService(*this);
-        void upload();
+        StatusService statusService = StatusService(*this);
+
+        void get(std::string);
     };
 }
-
-
-#endif //UPLOADER_VIDEOAPPLICATION_H

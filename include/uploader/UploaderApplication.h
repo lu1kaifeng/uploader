@@ -15,6 +15,7 @@
 #include "VideoApplication.h"
 #include <fstream>
 #include <cstdlib>
+#include "uploader/StatusApplication.h"
 
 #ifndef UPLOADER_UPLOADERAPPLICATION_H
 #define UPLOADER_UPLOADERAPPLICATION_H
